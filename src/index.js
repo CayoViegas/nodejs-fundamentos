@@ -103,6 +103,15 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
     return response.status(201).send();
 });
 
+//Retornar balanço da conta
+app.get("/balance", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+
+    const balance = getBalance(customer.statement);
+
+    return response.json(balance);
+});
+
 //Retornar extrato por data
 app.get("/statement/date", verifyIfExistsAccountCPF, (request, response) => {
     const { customer } = request;
@@ -132,6 +141,15 @@ app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
     const { customer } = request;
 
     return response.json(customer);
+});
+
+//Deletar cliente
+app.delete("/account", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+
+    customers.splice(customer, 1);
+
+    return response.status(200).json(customers);
 });
 
 app.listen(8001);
