@@ -7,7 +7,7 @@ app.use(express.json());
 
 const customers = [];
 
-//Middleware
+//Middleware de verificação
 function verifyIfExistsAccountCPF(request, response, next) {
     const { cpf } = request.headers;
 
@@ -115,6 +115,23 @@ app.get("/statement/date", verifyIfExistsAccountCPF, (request, response) => {
     new Date(dateFormat).toDateString());
 
     return response.json(customer.statement);
+});
+
+//Atualizar nome do cliente
+app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
+    const { name } = request.body;
+    const { customer } = request;
+
+    customer.name = name;
+
+    return response.status(201).send();
+});
+
+//Retornar cliente
+app.get("/account", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+
+    return response.json(customer);
 });
 
 app.listen(8001);
